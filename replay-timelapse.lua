@@ -1,18 +1,18 @@
 -- Output settings
-local resolution = {x = 1920, y = 1080}  -- Output image resolution (1080p)
---local resolution = {x = 3840, y = 2160}  -- Output image resolution (4k)
+--local resolution = {x = 1920, y = 1080}  -- Output image resolution (1080p)
+local resolution = {x = 3840, y = 2160}  -- Output image resolution (4k)
 local framerate = 60                     -- Timelapse frames per second
-local speedup = 300                      -- Game seconds per timelapse second
+local speedup = 600                      -- Game seconds per timelapse second
 local watch_rocket_launch = false        -- If true, slow down to real time and zoom in on first rocket launch
 
 local output_dir = "replay-timelapse"    -- Output directory (relative to Factorio script output directory)
-local screenshot_filename_pattern = output_dir .. "/%08d-base.png"
-local rocket_screenshot_filename_pattern = output_dir .. "/%08d-rocket.png"
+local screenshot_filename_pattern = output_dir .. "/base.png"
+local rocket_screenshot_filename_pattern = output_dir .. "/base.png"
 local research_progress_filename = output_dir .. "/research-progress.csv"
 local events_filename = output_dir .. "/events.csv"
 
 -- Camera movement parameters
-local min_zoom = 0.03125 * 4             -- Min zoom level (widest field of view)
+local min_zoom = 0.03125                 -- Min zoom level (widest field of view)
 local max_zoom = 0.5                     -- Max zoom level (narrowest field of view)
 local rocket_min_zoom = min_zoom / 2     -- Min zoom level after zooming out from rocket launch
 local margin_fraction = 0.05             -- Fraction of screen to leave as margin on each edge
@@ -580,6 +580,94 @@ function run()
       local idx = (event.tick % recently_built_ticks) + 1
       recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
       table.insert(recently_built_bboxes[idx], entity_bbox(event.created_entity))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_mined,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
+    end
+  )
+  --script.on_event(
+  --  defines.events.on_entity_died,
+  --  function (event)
+  --    local idx = (event.tick % recently_built_ticks) + 1
+  --    recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+  --    table.insert(recently_built_bboxes[idx], entity_bbox(event.entity))
+  --  end
+  --)
+  script.on_event(
+    defines.events.on_marked_for_deconstruction,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.entity))
+    end
+  )
+  script.on_event(
+    defines.events.on_marked_for_upgrade,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.entity))
+    end
+  )
+--  script.on_event(
+--    defines.events.on_player_deconstructed_area,
+--    function (event)
+--      local idx = (event.tick % recently_built_ticks) + 1
+--      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+--      table.insert(recently_built_bboxes[idx], entity_bbox(event.entity))
+--    end
+--  )
+  script.on_event(
+    defines.events.on_player_used_spider_remote,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.vehicle))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_built_entity,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_built_tile,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_mined_tile,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_mined,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
+    end
+  )
+  script.on_event(
+    defines.events.on_robot_exploded_cliff,
+    function (event)
+      local idx = (event.tick % recently_built_ticks) + 1
+      recently_built_bboxes[idx] = recently_built_bboxes[idx] or {}
+      table.insert(recently_built_bboxes[idx], entity_bbox(event.robot))
     end
   )
 
